@@ -1,27 +1,52 @@
-const express = require('express');
-const path = require('path');
-const cors = require('cors')
-require('dotenv').config();
-const helmet = require('helmet');
-const swaggerUi = require('swagger-ui-express')
-const yaml = require('yamljs')
-const swaggerDocs = yaml.load('swagger.yaml')
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(helmet({
-      crossOriginResourcePolicy: false,
-    }));
-app.use('/images', express.static(path.join(__dirname, 'images')))
+async function getWorks() {
+  const url = "http://localhost:5678/api/works";
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+      }
 
-const db = require("./models");
-const userRoutes = require('./routes/user.routes');
-const categoriesRoutes = require('./routes/categories.routes');
-const worksRoutes = require('./routes/works.routes');
-db.sequelize.sync().then(()=> console.log('db is ready'));
-app.use('/api/users', userRoutes);
-app.use('/api/categories', categoriesRoutes);
-app.use('/api/works', worksRoutes);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-module.exports = app;
+      const json = await response.json();
+      console.log(json);
+      for (let i = 0; i < json.length; i++) {
+          setFigure(json[i]);
+      }
+  } catch (error) {
+      console.error(error.message);
+  }
+}
+getWorks();
+
+function setFigure(data) {
+  const figure = document.createElement("figure");
+  figure.innerHTML = `<img src=${data.imageUrl} alt=${data.title}>
+      <figcaption>${data.title}</figcaption>`;
+
+  document.querySelector(".gallery").append(figure);
+}
+
+async function getCategories() {
+  const url = "http://localhost:5678/api/categories";
+  try {
+      const response = await fetch(url);
+      if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+      }
+
+      const json = await response.json();
+      console.log(json);
+      for (let i = 0; i < json.length; i++) {
+          setFilter(json[i]);
+      }
+  } catch (error) {
+      console.error(error.message);
+  }
+}
+getCategories();
+
+function setFilter(data) {
+  const div = document.createElement("div");
+  div.innerHTML = `${data.name}`;
+
+  document.querySelector(".div-container").append(div);
+}
