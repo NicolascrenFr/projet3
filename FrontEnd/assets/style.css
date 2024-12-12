@@ -144,6 +144,20 @@ li:hover {
 background-color: #1D6154;
 color: white;
 }
+.filter {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .filter:hover {
+    background-color: #1D6154;
+  }
+  
+  .filter.active {
+    background-color: #1D6154; /* Couleur de fond pour le filtre sélectionné */
+    color: white; /* changer la couleur du texte */
+  }  
 .gallery {
     width: 100%;
     display: grid;
@@ -188,6 +202,37 @@ margin: auto;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
+#LogIn {
+    width: 50%;
+margin: auto;
+}
+#LogIn > * {
+    text-align: center;
+
+}
+#LogIn h2{
+    margin-bottom: 20px;
+}
+#LogIn form {
+    text-align: left;
+    margin-top:30px;
+    display: flex;
+    flex-direction: column;
+}
+
+#LogIn input {
+    height: 50px;
+    font-size: 1.2em;
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+#LogIn label {
+    margin: 2em 0 1em 0;
+}
+#LogIn textarea {
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
 input[type="submit"]{
     font-family: 'Syne';
     font-weight: 700;
@@ -197,6 +242,14 @@ input[type="submit"]{
     width: 180px;
     text-align: center;
     border-radius: 60px ;
+}
+
+.motDePasseOublie {
+    display: block; /* Aligne le label sur une ligne indépendante */
+    margin-top: 15px; /* Espacement au-dessus du label */
+    text-align: center; /* Centre le texte du label */
+    font-size: 14px; /* Optionnel, ajuster la taille du texte */
+    color: #007BFF; /* Couleur du texte */
 }
 
 footer nav ul {

@@ -50,20 +50,29 @@ async function getCategories() {
     const categories = await response.json();
     console.log("Catégories récupérées :", categories);
 
+     // Conteneur pour les filtres
+     const filterContainer = document.querySelector(".div-container");
+
     // Ajouter le filtre "Tous"
     const allFilter = document.createElement("div");
     allFilter.classList.add("filter");
     allFilter.textContent = "Tous";
-    allFilter.addEventListener("click", () => getWorks()); // Affiche tous les projets
-    document.querySelector(".div-container").append(allFilter);
+    allFilter.addEventListener("click", () => {
+      getWorks(); // Affiche tous les projets
+      setActiveFilter(allFilter); // Ajoute la classe active au filtre seléctionné
+    });
+    filterContainer.append(allFilter);
 
     // Ajouter les autres catégories dynamiquement
     categories.forEach((category) => {
       const filter = document.createElement("div");
       filter.classList.add("filter");
       filter.textContent = category.name; // Nom de la catégorie
-      filter.addEventListener("click", () => getWorks(category.id)); // Filtrer par catégorie
-      document.querySelector(".div-container").append(filter);
+      filter.addEventListener("click", () => {
+        getWorks(category.id); // Filtrer par catégorie
+        setActiveFilter(filter); // Pour changer l'apparence du filtre seléctionné
+      });
+      filterContainer.append(filter);
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des catégories :", error.message);
@@ -107,9 +116,18 @@ function setFigure(data) {
   const figure = document.createElement("figure");
   figure.innerHTML = `
     <img src="${data.imageUrl}" alt="${data.title}">
-    <figcaption>${data.title}</figcaption>
-  `;
+    <figcaption>${data.title}</figcaption>`;
   gallery.appendChild(figure);
+}
+
+// Fonction pour gérer l'état actif des filtres
+function setActiveFilter(selectedFilter) {
+  // Retirer la classe 'active' de tous les filtres
+  const filters = document.querySelectorAll(".filter");
+  filters.forEach((filter) => filter.classList.remove("active"));
+
+  // Ajouter la classe 'active' au filtre sélectionné
+  selectedFilter.classList.add("active");
 }
 
 // Charger les filtres et les projets au chargement de la page
