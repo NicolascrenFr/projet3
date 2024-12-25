@@ -9,7 +9,7 @@ async function fetchWorks() {
     }
 
     const works = await response.json();
-    console.log("Données reçues :", works); // Pour vérifier les données reçues dans la console
+    // console.log("Données reçues :", works); // Pour vérifier les données reçues dans la console
 
     // Sélection de la galerie dans le DOM
     const gallery = document.querySelector(".gallery");
@@ -48,7 +48,7 @@ async function getCategories() {
     }
 
     const categories = await response.json();
-    console.log("Catégories récupérées :", categories);
+    // console.log("Catégories récupérées :", categories);
 
      // Conteneur pour les filtres
      const filterContainer = document.querySelector(".div-container");
@@ -90,14 +90,14 @@ async function getWorks(categoryId = null) {
     }
 
     const works = await response.json();
-    console.log("Projets récupérés :", works);
+    // console.log("Projets récupérés :", works);
 
     // Filtrer les projets si une catégorie est sélectionnée
     const filteredWorks = categoryId
       ? works.filter((work) => work.categoryId === categoryId)
       : works;
 
-    console.log("Projets affichés :", filteredWorks);
+    // console.log("Projets affichés :", filteredWorks);
 
     // Nettoyer la galerie avant d'ajouter les nouveaux éléments
     const gallery = document.querySelector(".gallery");
@@ -113,11 +113,23 @@ async function getWorks(categoryId = null) {
 // Fonction pour ajouter une figure dans la galerie
 function setFigure(data) {
   const gallery = document.querySelector(".gallery");
+  const galleryModal = document.querySelector(".gallery-modal");
+  
+  // crée la figure dans la galerie
   const figure = document.createElement("figure");
   figure.innerHTML = `
-    <img src="${data.imageUrl}" alt="${data.title}">
+    <img src=${data.imageUrl} alt=${data.title}>
     <figcaption>${data.title}</figcaption>`;
-  gallery.appendChild(figure);
+// document.querySelector(".gallery").append(figure);
+// document.querySelector(".gallery-modal").append(figure);
+//   gallery-modal.appendChild(figure);
+  
+// ajoute la figure à la galerie
+gallery.appendChild(figure);
+
+// Clone la figure et l'ajoute à la galerie modale
+const figureClone = figure.cloneNode(true);
+galleryModal.appendChild(figureClone);
 }
 
 // Fonction pour gérer l'état actif des filtres
@@ -136,4 +148,91 @@ document.addEventListener("DOMContentLoaded", () => {
   getWorks(); // Charger tous les projets
 });
 
+function displayAdminMode() {
+  if (sessionStorage.authToken) {
+  const editBanner = document.createElement("div");
+  editBanner.className = "edit";
+  editBanner.innerHTML = 
+'<p><a href="#modal1" class="js-modal"><i class="fa-regular fa-pen-to-square"`></i>Mode édition</a></p>';
+  document.body.prepend(editBanner);
+
+  document.querySelector(".login").textContent = "logout";
+}
+}
+
+displayAdminMode();
+
+let modal = null;
+const focusableSelector= "button, a, input, textarea";
+let focusables = [];
+let previouslyFocusedElement = null;
+
+const openModal = function (e) {
+  e.preventDefault();
+  modal = document.querySelector(e.target.getAttribute("href"));
+  focusables = Array.from(modal.querySelectorAll(focusableSelector));
+  focusables[0].focus();
+  modal.style.display = null;
+  modal.removeAttribute("aria-hidden");
+  modal.setAttribute("aria-modal", "true");
+  modal.addEventListener("click", closeModal);
+  modal.querySelector(".js-modal-close").addEventListener("click", closeModal);
+  modal.querySelector(".js-modal-stop").addEventListener("click", stopPropagation);
+
+}
+
+const closeModal = function (e) {
+  if (modal === null) return;
+  if (previouslyFocusedElement !== null) previouslyFocusedElement.focus()
+  e.preventDefault();
+  // window.setTimeout(function () {
+  // modal.style.display = "none";
+  // modal = null;
+  // }, 500)
+  modal.setAttribute("aria-hidden", "true"); // l'élément sera masqué//
+  modal.removeAttribute("aria-modal");
+  modal.removeEventListener("click", closeModal);
+  modal.querySelector(".js-modal-close").removeEventListener("click", closeModal);
+  modal.querySelector(".js-modal-stop").removeEventListener("click", stopPropagation);
+  const hideModal = function () {
+    modal.style.display = "none"
+    modal.removeEventListener("animationend", hideModal)
+    modal = null
+  }
+  modal.addEventListener("animationend", hideModal)
+}
+
+const stopPropagation = function (e) {
+  e.stopPropagation();
+}
+
+const focusInModal = function (e) {
+  e.preventDefault();
+  let index = focusables.findIndex(f => f === modal.querySelector(":focus"));
+  if (e.shiftkey === true) {
+    index --;
+  } else {
+  index++;
+  }
+  if (index >= focusables.length) {
+    index = 0;
+  }
+  if (index < 0) {
+    index = focusables.length - 1;
+  }
+  focusables[index].focus();
+}
+
+document.querySelectorAll(".js-modal").forEach(a => {
+  a.addEventListener("click", openModal);
+})
+
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape" || e.key === "Esc") {
+    closeModal(e);
+  }
+  if (e.key === "Tab" && modal !== null) {
+    focusInModal(e)
+  }
+})
 
