@@ -110,26 +110,35 @@ async function getWorks(categoryId = null) {
   }
 }
 
-// Fonction pour ajouter une figure dans la galerie
+/// Fonction pour ajouter une figure dans la galerie
 function setFigure(data) {
   const gallery = document.querySelector(".gallery");
   const galleryModal = document.querySelector(".gallery-modal");
-  
-  // crée la figure dans la galerie
+
+  // Crée la figure principale pour la galerie
   const figure = document.createElement("figure");
   figure.innerHTML = `
-    <img src=${data.imageUrl} alt=${data.title}>
-    <figcaption>${data.title}</figcaption>`;
-// document.querySelector(".gallery").append(figure);
-// document.querySelector(".gallery-modal").append(figure);
-//   gallery-modal.appendChild(figure);
-  
-// ajoute la figure à la galerie
-gallery.appendChild(figure);
+    <img src="${data.imageUrl}" alt="${data.title}">
+    <figcaption>${data.title}</figcaption>
+  `;
 
-// Clone la figure et l'ajoute à la galerie modale
-const figureClone = figure.cloneNode(true);
-galleryModal.appendChild(figureClone);
+  // Ajoute la figure principale à la galerie
+  gallery.appendChild(figure);
+
+  // Crée une figure distincte pour la galerie modale avec l'icône directement dans innerHTML
+  const figureClone = document.createElement("figure");
+  figureClone.innerHTML = `<div class="image-container">
+    <img src="${data.imageUrl}" alt="${data.title}">
+    <figcaption>${data.title}</figcaption>
+    <i class="fa-solid fa-trash-can overlay-icon"></i>
+    </div>
+    `;
+
+  // Ajoute la figure clone à la galerie modale
+  galleryModal.appendChild(figureClone);
+
+  // Retourner les deux éléments pour des modifications indépendantes
+  return { figure, figureClone };
 }
 
 // Fonction pour gérer l'état actif des filtres
@@ -235,4 +244,3 @@ window.addEventListener("keydown", function (e) {
     focusInModal(e)
   }
 })
-
