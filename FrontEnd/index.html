@@ -11,29 +11,57 @@
     <link rel="stylesheet" href="./assets/style.css">
     <script src="https://kit.fontawesome.com/d616bd41d7.js" crossorigin="anonymous"></script>
     <script src="js/app.js" defer></script>
+    <script src="js/login.js" defer></script>
 </head>
 <body>
-    <aside 
-        id = "modal1" 
-        class="modal" 
-        aria-hidden="true" 
-        role="dialog" 
-        aria-labelledby="titlemodal"
-        style="display : none">
-        <div class="modal-wrapper js-modal-stop">
-            <div class="close-button-container">
-                <button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <h3>Galerie photo</h3>  
-            <div class="gallery-modal"></div>  
-            <hr>
-            <div class="modal-button-container">
-            <button class="add-photo">Ajouter une photo</button>       
-            </div>
-        </div>
+    <!-- Première modale : Galerie photo -->
+<aside 
+id="modal1" 
+class="modal" 
+aria-hidden="true" 
+role="dialog" 
+aria-labelledby="titlemodal"
+style="display: none">
+<div class="modal-wrapper js-modal-stop">
+    <div class="close-button-container">
+        <button class="js-modal-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <h3>Galerie photo</h3>  
+    <div class="gallery-modal"></div>  
+    <hr>
+    <div class="modal-button-container">
+        <button class="add-photo">Ajouter une photo</button>  
+    </div>
+</div>
+</aside>
 
-    </aside>
+<!-- Seconde modale : Ajouter une photo -->
+<aside 
+id="modal2" 
+class="modal" 
+aria-hidden="true" 
+role="dialog" 
+aria-labelledby="addPhotoModal"
+style="display: none">
+<div class="modal-wrapper js-modal-stop">
+    <div class="return-button-container">
+        <button class="js-modal-return"><i class="fa-solid fa-arrow-left"></i></button>
+    </div>
+    
+    <h3>Ajouter une photo</h3>
+    <form id="add-photo-form">
+        <label for="photo-title">Titre</label>
+        <input type="text" id="photo-title" name="title" required>
+
+        <label for="photo-file">Fichier</label>
+        <input type="file" id="photo-file" name="file" accept="image/*" required>
+
+        <button type="submit">Valider</button>
+    </form>
+</div>
+</aside>
+
 <header>
     <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
     <nav>
@@ -59,12 +87,17 @@
     </section>
     <section id="portfolio">
         <div class="container">
-        <h2>Mes Projets</h2>
-        <p><i class="fa-regular fa-pen-to-square"></i>modifier</p>
-    </div>
+          <h2>Mes Projets</h2>
+          <p>
+            <a href="#modal1" class="js-modal-trigger" style="display: none;">
+                <i class="fa-regular fa-pen-to-square"></i>modifier
+            </a>
+          </p>
+        </div>
         <div class="div-container"></div>
         <div class="gallery"></div>
-    </section>
+      </section>
+      
     <section id="contact">
         <h2>Contact</h2>
         <p>Vous avez un projet ? Discutons-en !</p>
