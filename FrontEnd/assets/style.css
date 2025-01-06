@@ -67,34 +67,71 @@ footer, header, hgroup, menu, nav, section {
     justify-content: center; /* centre l'élément horizontalement*/
     top: 0;
     left: 0;
+    padding: 20px;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
     animation: fadeIn .3s both;
 }
+.modal-content {
+    padding: 10px; /* Réduit les espaces internes */
+    font-size: 14px; /* Réduit la taille du texte si nécessaire */
+}
+
 
 .modal-wrapper {
-    overflow: auto; /*en cas de débordement une scrollbar apparait */
-    width: 600px;
+    position: fixed;
+    top: 45%; /* Place au milieu de l'écran */
+    left: 50%;
+    transform: translate(-50%, -40%); /* Ajuste pour descendre plus bas */
+    width: 400px; /*Largeur fixe pour une meilleure lisibilité */
+    max-width: 80%; /* Adaptatif aux petits écrans */
+    background: white;
     padding: 20px;
-    max-width: calc(100vw - 20px); /* une fois la largeur de la taille de l'écran moins 20px */
-    max-height: calc(100vh - 20px); /* une fois la hauteur de la taille de l'écran moins 20px */
-    background-color: #FFF;
-    animation: slideFromTop .3s both .1s;
-
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
+
+.modal-wrapper hr {
+        margin: 50px 0 10px 0;
+       width: 100%;
+    justify-self: center;
+}
+
 
 .close-button-container {
     display: flex;
     justify-content: end;
+    right: 10px;
 }
+
+/* Boutons de fermeture et retour */
+.close-button-container, .return-button-container {
+    position: absolute;
+    top: 10px;
+  }
 
 .js-modal-close {
     background-color: white;
     border: none;
-    font-weight: bold;
-    font-size: 18px;
+    font-weight: normal;
+    font-size: 15px;
     cursor: pointer;
+}
+.js-modal-return {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button.js-modal-close,
+button.js-modal-return {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #333333;
+  cursor: pointer;
 }
 
 .modal[aria-hidden="true"] {
@@ -131,7 +168,7 @@ footer, header, hgroup, menu, nav, section {
 
 .add-photo {
     padding: 10px 20px;
-    width: 250px;
+    width: 220px;
 	border: 1px solid #1D6154;
 	border-radius: 25px;
 	font-family: 'Syne';
@@ -139,6 +176,100 @@ footer, header, hgroup, menu, nav, section {
     background-color: #1D6154;
 	cursor: pointer;
     margin-top: 20px;
+}
+.add-file {
+    padding: 10px 20px;
+    width: 250px;
+	border: 1px solid #B3B3B3;
+	border-radius: 25px;
+	font-family: 'Syne';
+	color: white;
+    background-color: #B3B3B3;
+	cursor: pointer;
+    margin-top: 20px;
+}
+
+.js-add-photo-file {
+    display: flex; /*Alignement flexible */
+    flex-direction: column; /*Aligne le contenu verticalement
+    align-items: center; /* Centre horizontalement */
+    justify-content: center; /* Centre verticalement */
+    width: 100%; /* Même largeur que les champs texte */
+    max-width: 400px; /* Limite pour éviter une taille excessive */
+    height: 200px; /* Hauteur augmentée pour être plus grand */
+    border: 2px dashed #ccc; /* Bordure en pointillés */
+    border-radius: 8px; /* Coins arrondis */
+    /* background-color: #E8F1F6; Fond clair */
+    cursor: pointer; /* Curseur pointeur */
+    margin: auto; /* Espacement vertical et centrage */
+    text-align: center; /* Centre le texte */
+    font-size: 0.6rem; /*Taille du texte */
+}
+
+label.js-add-photo-file {
+    padding: 10px 20px;
+    width: 150px;
+    height: 30px;
+	border: 1px solid #CBD6DC;
+	border-radius: 25px;
+	font-family: 'work Sans';
+	color: #306685;
+    background-color: #CBD6DC;
+	cursor: pointer;
+    margin-bottom: 10px;      /* Espacement en dessous du bouton */
+}
+
+/* Icône */
+.image-bouton i {
+    font-size: 50px;         /* Taille de l'icône */
+    color: #B9C5CC;             /* Couleur de l'icône */
+    margin-bottom: 10px;     /* Espacement en dessous de l'icône */
+  }
+
+.js-add-photo-file i {
+    font-size: 4rem; /* Agrandit l'icône */
+    color: #CBD6DC;
+    margin-bottom: 15px; /*Espace sous l'icône */
+}
+
+.js-add-photo-file input {
+    display: none; /*Masque le champ input de type file */
+}
+
+.js-add-photo-file p {
+    font-size: 0.9rem; /* Ajuste la taille du texte de description */
+    color: #666; /* Couleur de texte plus douce */
+    margin: 0;
+}
+
+.fa-image {
+    width: 120px;
+    font-size: 4em;
+	color: #B9C5CC;
+    margin-top: 5px;
+}
+
+.file-upload-container {
+    display: flex;
+    flex-direction: column; /* Aligne les éléments verticalement */
+    align-items: center;    /* Centre horizontalement */
+    justify-content: center; /* Centre verticalement */
+    text-align: center;      /* Centre le texte */
+    padding: 5px 20px;
+	font-family: 'Syne';
+	color: #B3B3B3;
+    background-color: #E8F1F6;
+	cursor: pointer;
+    width: 100%;  /* S'adapte au conteneur parent */
+  max-width: 300px;  /* Largeur maximale pour éviter que le contenu s'étale */
+  margin: 0 auto; /* Centre horizontalement dans la page */
+}
+
+.file-upload-container p {
+font-size: 0.5em;
+color: #444444;
+margin-bottom: 10px;      /* Espacement en dessous du bouton */
+
 }
 
 .image-container {
@@ -226,11 +357,7 @@ h3 {
     font-family: 'Work Sans';
     font-size: 26px;
     font-weight: 400;
-    margin-bottom: 40px;
-}
-
-hr {
-    margin: 50px 0 10px 0;
+    margin-bottom: 35px;
 }
 
 nav ul {
@@ -253,9 +380,6 @@ nav a:visited {
     color: black;
 }
 
-li:hover {
-    color: #B1663C;
-}
 #introduction {
     display: flex;
     align-items: center;
@@ -307,6 +431,7 @@ color: white;
 display: flex;
 align-items: center;
 justify-content: center;
+margin-bottom: 30px;
 }
 .container h2 {
 text-align: center;
@@ -331,6 +456,7 @@ margin-left: 10px;
     background-color: #1D6154; /* Couleur de fond pour le filtre sélectionné */
     color: white; /* changer la couleur du texte */
   }  
+
 .gallery {
     width: 100%;
     display: grid;
@@ -349,6 +475,10 @@ margin-left: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-column-gap: 10px;
     grid-row-gap: 20px;
+}
+.file-modal {
+    width: 100%;
+    display: flex;
 }
 
 .gallery-modal img {
@@ -387,6 +517,7 @@ margin: auto;
     font-size: 1.2em;
     border: none;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 #contact label {
     margin: 2em 0 1em 0;
@@ -394,6 +525,87 @@ margin: auto;
 #contact textarea {
     border: none;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+#modal {
+    position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 400px;
+  padding: 20px;
+  z-index: 1000;
+}
+
+#add-photo-form form {
+    text-align: left;
+    margin-top:30px;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+}
+
+#add-photo-form input {
+    height: 50px;
+    font-size: 1em;
+    border: none;
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+    box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+/* #add-photo-form label {
+    margin: 2em 0 1em 0;
+
+} */
+
+button.js-add-photo-file p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666666;
+  }
+
+#photo-categorie select {
+    height: 50px;
+    font-size: 1em;
+    border: none;
+    margin: 2em 0 1em 0;
+
+}
+
+/* Input de fichier (caché) */
+input[type="file"] {
+    display: none;
+  }
+  
+  /* Label et champs du formulaire */
+  label {
+    font-size: 1rem;
+    color: #333333;
+    display: block;
+    margin: 10px 0 5px;
+  }
+  
+  input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333333;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+
+  .input-field {
+    margin-bottom: 5px; /* Réduit l'espace en dessous de chaque champ */
+}
+
+.login {
+    cursor: pointer;
 }
 
 #LogIn {
@@ -436,6 +648,7 @@ input[type="submit"]{
     width: 180px;
     text-align: center;
     border-radius: 60px ;
+    cursor: pointer;
 }
 
 .motDePasseOublie {

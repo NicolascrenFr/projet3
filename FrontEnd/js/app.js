@@ -153,12 +153,12 @@ async function getCategories() {
   try {
     const response = await fetch(url);
 
-    if (sessionStorage.authToken) {
+    if (!response.ok) { // Vérifie si le statut HTTP indique une erreur
       throw new Error(`Erreur lors de la récupération des catégories : ${response.status}`);
-    }
+    }       
 
     const categories = await response.json();
-    // console.log("Catégories récupérées :", categories);
+    console.log("Catégories récupérées :", categories);
 
     // Conteneur pour les filtres
     const filterContainer = document.querySelector(".div-container");
@@ -188,6 +188,7 @@ async function getCategories() {
         filter.addEventListener("click", () => {
           getWorks(category.id); // Filtrer par catégorie
           setActiveFilter(filter); // Pour changer l'apparence du filtre sélectionné
+          console.log ("tata");
         });
         filterContainer.append(filter);
       });
@@ -200,6 +201,18 @@ async function getCategories() {
 function isUserLoggedIn() {
   return Boolean(sessionStorage.getItem("authToken")); // Vérifie si un token d'authentification existe
 }
+
+// Pour ne plus voir les catégories quand on est login
+function toggleCategoriesVisibility() {
+  const categoriesContainer = document.querySelector(".div-container"); // Sélectionnez le conteneur des catégories
+  if (isUserLoggedIn()) {
+      categoriesContainer.style.display = "none"; // Masquer les catégories
+  } else {
+      categoriesContainer.style.display = "flex"; // Afficher les catégories
+  }
+}
+    toggleCategoriesVisibility();
+
 
 function displayAdminMode() {
   const editButton = document.querySelector(".js-modal-trigger"); // Bouton "modifier"
@@ -219,7 +232,7 @@ function displayAdminMode() {
     document.body.prepend(editBanner);
 
     // Modifier le bouton en "Logout"
-    loginButton.textContent = "Logout";
+    loginButton.textContent = "logout";
 
     // Gestionnaire pour la déconnexion
     loginButton.addEventListener("click", () => {
@@ -229,7 +242,7 @@ function displayAdminMode() {
   } else {
     // Mode visiteur : utilisateur non connecté
     editButton.style.display = "none"; // Masquer le bouton "Modifier"
-    loginButton.textContent = "Login";
+    loginButton.textContent = "login";
 
     // Gestionnaire pour la connexion
     loginButton.addEventListener("click", () => {
@@ -349,11 +362,156 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fermer les modales au clic en dehors de leur contenu
   document.querySelectorAll(".modal").forEach((modal) => {
     modal.addEventListener("click", (event) => {
-      if (!event.target.closest(".js-modal-stop")) {
+      // Si le clic est directement sur la modale mais pas dans .modal-wrapper (contenu)
+      if (event.target === modal) {
         closeModal(modal);
       }
     });
   });
+  
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const categoriesSelect = document.getElementById("photo-categorie");
+  const apiUrl = "http://localhost:5678/api/categories";
+
+  async function fetchCategories() {
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error("Erreur lors de la récupération des catégories.");
+      }
+
+      const categories = await response.json(); // Lire directement au format JSON
+
+      // Ajouter les catégories au menu déroulant
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id; // Ajustez selon la structure de votre API
+        option.textContent = category.name; // Ajustez selon la structure de votre API
+        categoriesSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Erreur :", error?.message || error);
+      alert("Impossible de charger les catégories. Veuillez réessayer plus tard.");
+    }
+  }
+
+  fetchCategories(); // Appeler la fonction pour charger les catégories
+});
+
+document.querySelector('.js-modal-close').addEventListener('click', () => {
+  document.querySelector('.modal-wrapper').classList.remove('active'); // Cache la modale
+});
+
+document.querySelector('.js-modal-return').addEventListener('click', () => {
+  // Action pour retourner ou fermer
+  document.querySelector('.modal-wrapper').classList.remove('active');
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const modal1 = document.getElementById("modal1");
+  const modal2 = document.getElementById("modal2");
+  const addPhotoButton = document.querySelector(".add-photo");
+  const returnButton = document.querySelector(".js-modal-return");
+  const closeModalButtons = document.querySelectorAll(".js-modal-close");
+
+  const categorySelect = document.getElementById("category-select");
+  const photoForm = document.getElementById("add-photo-form");
+  const photoInput = document.getElementById("photo-input");
+  const titleInput = document.getElementById("title-input");
+
+  // Fonction pour ouvrir une modal
+  function openModal(modal) {
+    modal.style.display = "block";
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  // Fonction pour fermer une modal
+  function closeModal(modal) {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  // Fonction pour charger les catégories depuis l'API
+  async function loadCategories() {
+    try {
+      const response = await fetch("http://localhost:5678/api/categories");
+      if (!response.ok) {
+        throw new Error("Erreur lors du chargement des catégories");
+      }
+      const categories = await response.json();
+
+      // Effacer les options existantes
+      categorySelect.innerHTML = "";
+
+      // Ajouter les nouvelles catégories
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        categorySelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Erreur lors de la récupération des catégories :", error);
+    }
+  }
+
+  // Fonction pour envoyer une photo via l'API
+  async function submitPhoto(event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("photo", photoInput.files[0]); // Fichier de la photo
+    formData.append("title", titleInput.value); // Titre de la photo
+    formData.append("category", categorySelect.value); // Catégorie sélectionnée
+
+    try {
+      const response = await fetch("http://localhost:5678/api/works", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi de la photo");
+      }
+
+      const result = await response.json();
+      console.log("Photo envoyée avec succès :", result);
+
+      // Réinitialiser le formulaire après succès
+      photoForm.reset();
+
+      // Fermer la modal 2
+      closeModal(modal2);
+      openModal(modal1); // Retourner à la première modal si nécessaire
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de la photo :", error);
+    }
+  }
+
+  // Ouvrir la seconde modal et charger les catégories
+  addPhotoButton.addEventListener("click", () => {
+    closeModal(modal1); // Fermer la première modal
+    openModal(modal2); // Ouvrir la seconde modal
+    loadCategories(); // Charger les catégories
+  });
+
+  // Revenir à la première modal
+  returnButton.addEventListener("click", () => {
+    closeModal(modal2);
+    openModal(modal1);
+  });
+
+  // Fermer les modals au clic sur les boutons de fermeture
+  closeModalButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      closeModal(modal1);
+      closeModal(modal2);
+    });
+  });
+
+  // Gestion de l'envoi du formulaire pour ajouter une photo
+  photoForm.addEventListener("submit", submitPhoto);
+});
 

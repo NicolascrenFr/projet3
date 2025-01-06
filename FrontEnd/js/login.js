@@ -73,7 +73,12 @@
     }
   })
 
-document.getElementById("loginForm").addEventListener("submit", handleSubmit);
+  document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener("submit", handleSubmit);
+    }
+});
 
 async function handleSubmit(event) {
     event.preventDefault();
@@ -105,3 +110,5 @@ async function handleSubmit(event) {
     window.location.href = "index.html";
     }
 }
+
+
