@@ -99,37 +99,37 @@ figureClone.innerHTML = `<div class="image-container">
 
 }
 
-async function deleteWork(workId) {
-  const token = sessionStorage.getItem("authToken"); // Récupérer le token d'authentification
-  if (!token) {
-    console.error("Utilisateur non authentifié");
-    return;
-  }
+// async function deleteWork(workId) {
+//   const token = sessionStorage.getItem("authToken"); // Récupérer le token d'authentification
+//   if (!token) {
+//     console.error("Utilisateur non authentifié");
+//     return;
+//   }
 
-  try {
-    const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`, // Ajouter le token dans le header
-        "Content-Type": "application/json",
-      },
-    });
+//   try {
+//     const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
+//       method: "DELETE",
+//       headers: {
+//         "Authorization": `Bearer ${token}`, // Ajouter le token dans le header
+//         "Content-Type": "application/json",
+//       },
+//     });
 
-    if (response.ok) {
-      console.log(`Work avec ID ${workId} supprimé avec succès`);
+//     if (response.ok) {
+//       console.log(`Work avec ID ${workId} supprimé avec succès`);
 
-      // Supprimer l'élément du DOM
-      const workElement = document.querySelector(`#work-${workId}`);
-      if (workElement) {
-        workElement.remove();
-      }
-    } else {
-      console.error("Erreur lors de la suppression :", response.statusText);
-    }
-  } catch (error) {
-    console.error("Erreur réseau :", error);
-  }
-}
+//       // Supprimer l'élément du DOM
+//       const workElement = document.querySelector(`#work-${workId}`);
+//       if (workElement) {
+//         workElement.remove();
+//       }
+//     } else {
+//       console.error("Erreur lors de la suppression :", response.statusText);
+//     }
+//   } catch (error) {
+//     console.error("Erreur réseau :", error);
+//   }
+// }
 
 
 // Fonction pour gérer l'état actif des filtres
@@ -410,24 +410,24 @@ document.querySelector('.js-modal-return').addEventListener('click', () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const modal1 = document.getElementById("modal1");
+//   const modal1 = document.getElementById("modal1");
   const modal2 = document.getElementById("modal2");
   const addPhotoButton = document.querySelector(".add-photo");
   const returnButton = document.querySelector(".js-modal-return");
   const closeModalButtons = document.querySelectorAll(".js-modal-close");
 
-  const categorySelect = document.getElementById("category-select");
+  const categorySelect = document.getElementById("photo-categorie");
   const photoForm = document.getElementById("add-photo-form");
-  const photoInput = document.getElementById("photo-input");
-  const titleInput = document.getElementById("title-input");
+  const photoInput = document.getElementById("photo-file");
+  const titleInput = document.getElementById("photo-title");
 
-  // Fonction pour ouvrir une modal
+//   // Fonction pour ouvrir une modal
   function openModal(modal) {
     modal.style.display = "block";
     modal.setAttribute("aria-hidden", "false");
   }
 
-  // Fonction pour fermer une modal
+//   // Fonction pour fermer une modal
   function closeModal(modal) {
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true");
@@ -461,8 +461,14 @@ document.addEventListener("DOMContentLoaded", () => {
   async function submitPhoto(event) {
     event.preventDefault();
 
+    const token = sessionStorage.getItem("authToken"); // Récupérer le token d'authentification
+  if (!token) {
+    console.error("Utilisateur non authentifié");
+    return;
+  }
+
     const formData = new FormData();
-    formData.append("photo", photoInput.files[0]); // Fichier de la photo
+    formData.append("image", photoInput.files[0]); // Fichier de la photo
     formData.append("title", titleInput.value); // Titre de la photo
     formData.append("category", categorySelect.value); // Catégorie sélectionnée
 
@@ -470,6 +476,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch("http://localhost:5678/api/works", {
         method: "POST",
         body: formData,
+        headers: {
+          "Authorization": `Bearer ${token}`, // Ajouter le token dans le header
+          "Accept": "application/json"
+      },
       });
 
       if (!response.ok) {
@@ -513,5 +523,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Gestion de l'envoi du formulaire pour ajouter une photo
   photoForm.addEventListener("submit", submitPhoto);
-});
+;
 
+// document.querySelector("#photo-file").style.display="none";
+// document.getElementById("file").addEventListener("change", function (event) {
+//   const file = event.target.file[0];
+//   if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+//     const reader = new FileReader();
+//     reader.onload = function (e) {
+//       const img = document.createElement("img");
+//       img.src = e.target.result;
+//       img.alt = "Uploaded Photo";
+//       document.getElementById("photo-container").appendChild(img);
+//     };
+//     reader.readAsDataURL(file);
+//   } else {
+//     alert("Veuillez séléctionner une image au format JPG ou PNG.");
+//   }
+});
