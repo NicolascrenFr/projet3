@@ -56,12 +56,10 @@ style="display: none">
     <h3>Ajout photo</h3>
     <div class="file-modal"></div>  
     <form id="add-photo-form" method="post" name="fileupload" action="#">
-        <!-- <div id="photo-container"></div> -->
         <div class="file-upload-container">
             <div class="image-bouton"><i class="fa-regular fa-image"></i></div>
             <label for="photo-file" class="js-add-photo-file">
                  + Ajouter photo
-                
             </label>
             <input type="file"
                    id="photo-file"
@@ -69,6 +67,10 @@ style="display: none">
                    accept="image/png, image/jpeg" 
                    required>
                 <p>jpg, png : 4 mo max</p>
+                <!-- Conteneur pour l'aperçu -->
+    <div id="preview-container">
+        <img id="preview-image" src="#" alt="Aperçu de l'image" style="display: none; margin-top: 10px;">
+    </div>
         </div>
         <br>
         <label for="photo-title">Titre</label>
@@ -78,8 +80,9 @@ style="display: none">
         <label for="photo-categorie">Catégorie</label>
         <br>
         <select id="photo-categorie" name="photo-categorie">
-            <option value="" disabled selected></option>
+            <!-- <option value="" disabled selected></option> -->
         </select>
+        
         <hr>
         <div class="modal-button-container">
             <button class="add-file" type="submit">Valider</button>  
